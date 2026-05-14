@@ -8,8 +8,8 @@ spots_remaining: 7
 spots_updated: "5月19日"
 status: open
 cover_image: "/covers/first-class.jpg"
-qr_image: "/qr/alipay.png"
-qr_type: alipay
+qr_image: "/qr/weixinpay.png"
+qr_type: wechat
 organizer_wechat: "your_wechat_id"
 ---
 
