@@ -86,6 +86,7 @@ const status = entry.data.status ?? 'open';
       border-radius: 8px;
       margin: 10px 0;
       display: block;
+      content-visibility: auto;
     }
     /* highlight box — wrap text in > blockquote for warm background */
     .content :global(blockquote) {
@@ -176,8 +177,8 @@ const status = entry.data.status ?? 'open';
     }
   </style>
 
-  <!-- 封面图 -->
-  <img class="cover" src={cover_image} alt={title} />
+  <!-- 封面图（优先加载） -->
+  <img class="cover" src={cover_image} alt={title} fetchpriority="high" decoding="async" />
 
   <div class="header">
     <h1>{title}</h1>
