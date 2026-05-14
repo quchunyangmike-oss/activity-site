@@ -122,10 +122,18 @@ const status = entry.data.status ?? 'open';
       margin-bottom: 10px;
     }
     .qr-img-error { display: none; }
+    .qr-link { display: inline-block; text-decoration: none; }
+    .qr-tap-hint {
+      display: block;
+      font-size: 0.78rem;
+      color: #999;
+      margin-top: 4px;
+      margin-bottom: 8px;
+    }
     .amount-note {
-      font-size: 0.95rem;
+      font-size: 1rem;
       color: #E85D04;
-      font-weight: 600;
+      font-weight: 700;
       margin-bottom: 6px;
     }
     .save-hint { font-size: 0.8rem; color: #777; margin-bottom: 3px; }
@@ -217,16 +225,18 @@ const status = entry.data.status ?? 'open';
   {status === 'open' && (
     <div class="qr-section">
       <h2>扫码报名 · {qrLabel}</h2>
-      <img
-        class="qr-img"
-        src={qr_image}
-        alt={`${qrLabel}收款码`}
-        onerror="this.style.display='none';this.nextElementSibling.style.display='block'"
-      />
+      <a href={qr_image} target="_blank" class="qr-link" title="点击放大扫码">
+        <img
+          class="qr-img"
+          src={qr_image}
+          alt={`${qrLabel}收款码`}
+          onerror="this.style.display='none';this.parentElement.nextElementSibling.style.display='block'"
+        />
+        <span class="qr-tap-hint">👆 点击放大 · 长按识别二维码</span>
+      </a>
       <p class="qr-img-error fallback">图片加载失败，请微信联系：{organizer_wechat}</p>
       <p class="amount-note">扫码付款 ¥{price}</p>
-      <p class="save-hint">长按图片 → 识别图中二维码</p>
-      <p class="save-hint-alt">若长按无效，请保存到手机相册，打开微信扫一扫</p>
+      <p class="save-hint-alt">点击图片放大后，长按 → 识别图中二维码</p>
     </div>
   )}
 
