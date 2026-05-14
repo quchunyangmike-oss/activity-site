@@ -1,0 +1,29 @@
+---
+import ActivityLayout from '../layouts/ActivityLayout.astro';
+---
+
+<ActivityLayout title="页面不存在">
+  <style>
+    .not-found {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 60vh;
+      padding: 40px 20px;
+      text-align: center;
+    }
+    .not-found h1 { font-size: 1.3rem; margin-bottom: 12px; color: #333; }
+    .not-found p { color: #666; margin-bottom: 24px; }
+    .not-found a {
+      color: #E85D04;
+      text-decoration: none;
+      font-weight: 600;
+    }
+  </style>
+  <div class="not-found">
+    <h1>页面不存在</h1>
+    <p>这个活动可能已下线，或链接有误。</p>
+    <a href="/">← 返回首页</a>
+  </div>
+</ActivityLayout>

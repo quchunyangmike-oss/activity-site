@@ -1,0 +1,65 @@
+---
+import ActivityLayout from '../layouts/ActivityLayout.astro';
+import { getCollection } from 'astro:content';
+
+const activities = await getCollection('activities');
+---
+
+<ActivityLayout title="亲子活动">
+  <style>
+    .home-header {
+      padding: 32px 20px 16px;
+      border-bottom: 1px solid #eee;
+    }
+    .home-header h1 { font-size: 1.4rem; font-weight: 700; }
+    .home-header p { color: #666; font-size: 0.9rem; margin-top: 4px; }
+
+    .activity-list { padding: 16px 20px; }
+
+    .card {
+      border: 1px solid #eee;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+    .card:hover { border-color: #E85D04; }
+    .card-cover { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block; }
+    .card-body { padding: 14px 16px; }
+    .card-title { font-size: 1rem; font-weight: 600; margin-bottom: 6px; }
+    .card-meta { font-size: 0.85rem; color: #666; }
+    .card-price { font-weight: 600; color: #E85D04; margin-top: 6px; font-size: 0.95rem; }
+    .badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 4px;
+      margin-bottom: 8px;
+    }
+    .badge-own { background: #E85D04; color: #fff; }
+    .badge-full { background: #eee; color: #888; font-weight: 400; }
+  </style>
+
+  <div class="home-header">
+    <h1>亲子活动</h1>
+    <p>精选 · 小班 · 高质量</p>
+  </div>
+
+  <div class="activity-list">
+    {activities.map((act) => (
+      <a class="card" href={`/activities/${act.slug}`}>
+        <img class="card-cover" src={act.data.cover_image} alt={act.data.title} />
+        <div class="card-body">
+          <span class="badge badge-own">自有</span>
+          {act.data.status === 'full' && <span class="badge badge-full">已满</span>}
+          <div class="card-title">{act.data.title}</div>
+          <div class="card-meta">{act.data.date} · {act.data.location}</div>
+          <div class="card-price">¥{act.data.price}</div>
+        </div>
+      </a>
+    ))}
+  </div>
+</ActivityLayout>
