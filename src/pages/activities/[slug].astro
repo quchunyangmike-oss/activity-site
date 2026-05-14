@@ -13,34 +13,36 @@ export async function getStaticPaths() {
 const { entry } = Astro.props;
 const { Content } = await entry.render();
 const {
-  title, date, location, price, capacity,
+  title, date, location, price, capacity, age_range,
   spots_remaining, spots_updated, status,
   cover_image, qr_image, qr_type, organizer_wechat,
+  organizer_qr_image, organizer_name,
 } = entry.data;
 
 const qrLabel = qr_type === 'alipay' ? '支付宝' : '微信支付';
+const contactName = organizer_name ?? '晓晴老师';
 ---
 
 <ActivityLayout title={title}>
   <style>
+    /* ── Base ── */
+    * { box-sizing: border-box; }
+
     .cover { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block; }
 
-    .header { padding: 20px 20px 0; }
-    h1 { font-size: 1.4rem; font-weight: 700; line-height: 1.3; margin-bottom: 12px; }
+    /* ── Header ── */
+    .header { padding: 20px 16px 0; }
+    h1 { font-size: 1.25rem; font-weight: 700; line-height: 1.45; margin-bottom: 14px; }
 
-    .price-row {
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: #E85D04;
-      margin-bottom: 8px;
-    }
-    .price-row .spots { color: #555; font-size: 0.95rem; font-weight: 400; }
-    .spots-updated { font-size: 0.78rem; color: #999; margin-bottom: 16px; }
+    .price-row { font-size: 1.3rem; font-weight: 700; color: #E85D04; margin-bottom: 4px; }
+    .price-row .spots { font-size: 0.9rem; font-weight: 400; color: #666; }
+    .spots-updated { font-size: 0.75rem; color: #bbb; margin-bottom: 14px; }
 
-    .banner-full, .banner-cancelled {
-      margin: 0 0 16px;
-      padding: 12px 20px;
-      font-size: 1rem;
+    /* ── Status banners ── */
+    .banner {
+      margin: 0 0 14px;
+      padding: 10px 16px;
+      font-size: 0.95rem;
       font-weight: 600;
       text-align: center;
       border-radius: 6px;
@@ -48,58 +50,138 @@ const qrLabel = qr_type === 'alipay' ? '支付宝' : '微信支付';
     .banner-full { background: #fff3cd; color: #856404; }
     .banner-cancelled { background: #f8d7da; color: #721c24; }
 
-    .meta { font-size: 0.9rem; color: #555; padding-bottom: 16px; border-bottom: 1px solid #eee; }
-    .meta p { margin-bottom: 4px; }
-
-    .content { padding: 20px; }
-    .content :global(p) { margin-bottom: 1em; }
-    .content :global(img) { max-width: 100%; border-radius: 6px; margin: 8px 0; }
-    .content :global(h2) { font-size: 1.1rem; margin: 1.5em 0 0.5em; }
-
-    .qr-section {
-      margin: 0 20px 32px;
-      padding: 20px;
-      border: 1px solid #eee;
+    /* ── Info grid ── */
+    .info-grid {
+      background: #fff8f4;
+      border: 1px solid #fde8d8;
       border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 4px;
+      font-size: 0.88rem;
+      line-height: 1.9;
+      color: #333;
+    }
+
+    /* ── Divider ── */
+    .divider { height: 1px; background: #f0f0f0; margin: 16px 0; }
+
+    /* ── Main content ── */
+    .content { padding: 0 16px 8px; font-size: 0.93rem; line-height: 1.85; color: #222; }
+
+    .content :global(p) { margin-bottom: 1em; }
+    .content :global(h2) {
+      font-size: 1rem;
+      font-weight: 700;
+      margin: 1.6em 0 0.5em;
+      color: #111;
+    }
+    .content :global(ul), .content :global(ol) {
+      padding-left: 1.2em;
+      margin-bottom: 1em;
+    }
+    .content :global(li) { margin-bottom: 0.3em; }
+    .content :global(img) {
+      width: 100%;
+      border-radius: 8px;
+      margin: 10px 0;
+      display: block;
+    }
+    /* highlight box — wrap text in > blockquote for warm background */
+    .content :global(blockquote) {
+      margin: 1em 0;
+      padding: 12px 16px;
+      background: #fff8f4;
+      border-left: 3px solid #E85D04;
+      border-radius: 0 8px 8px 0;
+      color: #444;
+      font-size: 0.88rem;
+    }
+    .content :global(blockquote p) { margin-bottom: 0; }
+
+    /* ── QR section ── */
+    .qr-section {
+      margin: 8px 16px 0;
+      padding: 20px 16px;
+      border: 1px solid #eee;
+      border-radius: 12px;
       text-align: center;
     }
-    .qr-section h2 { font-size: 1rem; font-weight: 600; margin-bottom: 12px; }
+    .qr-section h2 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 14px;
+      color: #111;
+    }
     .qr-img {
-      width: 220px;
-      height: 220px;
+      width: 200px;
+      height: 200px;
       object-fit: contain;
       border-radius: 6px;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
     .qr-img-error { display: none; }
     .amount-note {
       font-size: 0.95rem;
       color: #E85D04;
       font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .save-hint { font-size: 0.8rem; color: #777; margin-bottom: 3px; }
+    .save-hint-alt { font-size: 0.8rem; color: #aaa; }
+    .fallback { font-size: 0.8rem; color: #aaa; margin-top: 6px; }
+
+    /* ── Organizer contact section ── */
+    .contact-section {
+      margin: 12px 16px 32px;
+      padding: 20px 16px;
+      background: #f9fafb;
+      border-radius: 12px;
+      text-align: center;
+    }
+    .contact-section h2 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: #111;
+    }
+    .contact-section .tip {
+      font-size: 0.83rem;
+      color: #555;
+      margin-bottom: 14px;
+      line-height: 1.6;
+    }
+    .contact-section .tip strong { color: #E85D04; }
+    .contact-qr {
+      width: 180px;
+      height: 180px;
+      object-fit: contain;
+      border-radius: 6px;
       margin-bottom: 8px;
     }
-    .save-hint { font-size: 0.82rem; color: #666; margin-bottom: 4px; }
-    .save-hint-alt { font-size: 0.82rem; color: #888; margin-bottom: 12px; }
-    .fallback { font-size: 0.82rem; color: #999; }
+    .contact-section .wechat-id {
+      font-size: 0.8rem;
+      color: #aaa;
+    }
 
+    /* ── signup note (fallback if no organizer QR) ── */
     .signup-note {
-      margin: 0 20px 40px;
+      margin: 12px 16px 32px;
       padding: 14px 16px;
       background: #f5f5f5;
       border-radius: 8px;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       color: #444;
+      line-height: 1.7;
     }
   </style>
 
-  <!-- 封面图（16:9） -->
+  <!-- 封面图 -->
   <img class="cover" src={cover_image} alt={title} />
 
   <div class="header">
-    <!-- 标题 -->
     <h1>{title}</h1>
 
-    <!-- 价格 + 剩余名额（above fold） -->
+    <!-- 价格 + 名额 -->
     <div class="price-row">
       ¥{price}
       {status === 'open' && (
@@ -108,28 +190,28 @@ const qrLabel = qr_type === 'alipay' ? '支付宝' : '微信支付';
     </div>
     <div class="spots-updated">名额数据 {spots_updated} 更新</div>
 
-    <!-- 满额 / 取消 banner -->
-    {status === 'full' && (
-      <div class="banner-full">本期已满，关注下期</div>
-    )}
-    {status === 'cancelled' && (
-      <div class="banner-cancelled">本期已取消</div>
-    )}
+    <!-- 满额 / 取消 -->
+    {status === 'full' && <div class="banner banner-full">本期已满，关注下期 👀</div>}
+    {status === 'cancelled' && <div class="banner banner-cancelled">本期已取消</div>}
 
-    <!-- 基本信息 -->
-    <div class="meta">
-      <p>🗓 {date}</p>
-      <p>📍 {location}</p>
-      <p>👥 共 {capacity} 名额</p>
+    <!-- 基本信息格 -->
+    <div class="info-grid">
+      <div>🗓 <strong>时间：</strong>{date}</div>
+      <div>📍 <strong>地址：</strong>{location}</div>
+      {age_range && <div>👶 <strong>年龄：</strong>{age_range}</div>}
+      <div>👬 <strong>人数：</strong>限 {capacity} 组家庭</div>
+      <div>💰 <strong>费用：</strong>¥{price} / 孩子，陪同家长免费</div>
     </div>
   </div>
 
-  <!-- 活动介绍 -->
+  <div class="divider"></div>
+
+  <!-- 活动介绍（富文本 markdown） -->
   <div class="content">
     <Content />
   </div>
 
-  <!-- 收款码（仅 open 状态显示） -->
+  <!-- 收款码 -->
   {status === 'open' && (
     <div class="qr-section">
       <h2>扫码报名 · {qrLabel}</h2>
@@ -139,19 +221,32 @@ const qrLabel = qr_type === 'alipay' ? '支付宝' : '微信支付';
         alt={`${qrLabel}收款码`}
         onerror="this.style.display='none';this.nextElementSibling.style.display='block'"
       />
-      <p class="qr-img-error fallback">
-        图片加载失败，请微信联系：{organizer_wechat}
-      </p>
+      <p class="qr-img-error fallback">图片加载失败，请微信联系：{organizer_wechat}</p>
       <p class="amount-note">⚠️ 请手动输入金额：¥{price}</p>
       <p class="save-hint">长按图片保存二维码，打开{qrLabel}扫码付款</p>
-      <p class="save-hint-alt">若无法长按保存，请截图后用支付宝 / 微信扫一扫识别二维码</p>
+      <p class="save-hint-alt">若无法长按保存，请截图后用微信扫一扫识别</p>
     </div>
   )}
 
-  <!-- 报名说明 -->
-  {status === 'open' && (
-    <div class="signup-note">
-      扫码付款后请微信私信：孩子姓名 + 年龄
+  <!-- 联系老师（付款后） -->
+  {status === 'open' && organizer_qr_image ? (
+    <div class="contact-section">
+      <h2>缴费成功后联系{contactName} 🌹</h2>
+      <p class="tip">
+        请添加{contactName}微信，发送：<br />
+        <strong>付款截图 + 宝贝中文名 + 英文名 + 年龄</strong>
+      </p>
+      <img
+        class="contact-qr"
+        src={organizer_qr_image}
+        alt={`${contactName}微信二维码`}
+        onerror="this.style.display='none'"
+      />
+      <p class="wechat-id">微信号：{organizer_wechat}</p>
     </div>
-  )}
+  ) : status === 'open' ? (
+    <div class="signup-note">
+      缴费成功后请微信联系 <strong>{organizer_wechat}</strong>，发送：付款截图 + 宝贝中文名 + 英文名 + 年龄
+    </div>
+  ) : null}
 </ActivityLayout>

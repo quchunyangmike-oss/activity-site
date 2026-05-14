@@ -14,7 +14,10 @@ const activities = defineCollection({
     cover_image: z.string(),
     qr_image: z.string(),
     qr_type: z.enum(['alipay', 'wechat']),
+    age_range: z.string().optional(),
     organizer_wechat: z.string(),
+    organizer_qr_image: z.string().optional(),
+    organizer_name: z.string().optional(),
   }),
 });
 
