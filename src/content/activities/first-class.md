@@ -1,17 +1,14 @@
 ---
 title: "中教全英「彩虹兔语感启蒙 Row Your Boat」绘本精读英语启蒙派对🎉"
-date: "4月15日（周三）10:30–11:30"
-location: "宝安壹方城小彼恩点读馆"
-age_range: "1–3.5 岁"
-price: 159
+date: "5月19日（周二）10:15–11:15"
+location: "福田区中心书城负一楼·小彼恩旁（趣阅岛）"
+age_range: "1–3.5岁"
+price: 169
 capacity: 8
-spots_remaining: 5
-spots_updated: "4月14日"
-status: open
 cover_image: "/covers/first-class.jpg"
 qr_image: "/qr/weixinpay.png"
 qr_type: wechat
-organizer_wechat: "your_wechat_id"
+organizer_wechat: "HC05261103"
 organizer_qr_image: "/qr/organizer.png"
 organizer_name: "晓晴老师"
 ---
@@ -20,7 +17,7 @@ organizer_name: "晓晴老师"
 
 我们把经典童谣《Row, Row, Row Your Boat》搬到了线下，将绘本阅读转化为可触摸、可操作、可探索、可感知的沉浸式体验，在真实社交环境中提供情绪价值与展示舞台，帮助孩子从兴趣走向习惯与能力提升，获得终身学习的内驱力！
 
-![活动现场](/covers/first-class.jpg)
+![活动现场](/covers/1.jpg)
 
 ## 🌟 活动亮点
 
@@ -33,7 +30,7 @@ organizer_name: "晓晴老师"
 ✅ **高质量亲子陪伴**
 特设亲子互动环节，让您和宝贝在合唱与游戏中建立更深的情感联结
 
-![亲子互动现场](/covers/first-class.jpg)
+![亲子互动现场](/covers/2.jpg)
 
 ## 🗺 活动流程
 
@@ -42,6 +39,8 @@ organizer_name: "晓晴老师"
 3. **英文律动** — 全身动起来！在音乐中感受语言的节奏美
 4. **亲子互动** — 默契大考验，共享温馨时光
 5. **阅读精读** — 归纳总结，巩固语言记忆点
+
+![亲子互动现场](/covers/3.jpg)
 
 ## 温馨提示
 

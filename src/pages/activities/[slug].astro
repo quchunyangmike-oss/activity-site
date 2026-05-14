@@ -14,16 +14,17 @@ const { entry } = Astro.props;
 const { Content } = await entry.render();
 const {
   title, date, location, price, capacity, age_range,
-  spots_remaining, spots_updated, status,
+  spots_remaining, spots_updated,
   cover_image, qr_image, qr_type, organizer_wechat,
   organizer_qr_image, organizer_name,
 } = entry.data;
 
 const qrLabel = qr_type === 'alipay' ? '支付宝' : '微信支付';
 const contactName = organizer_name ?? '晓晴老师';
+const status = entry.data.status ?? 'open';
 ---
 
-<ActivityLayout title={title}>
+<ActivityLayout title={title} ogImage={cover_image}>
   <style>
     /* ── Base ── */
     * { box-sizing: border-box; }
@@ -184,11 +185,11 @@ const contactName = organizer_name ?? '晓晴老师';
     <!-- 价格 + 名额 -->
     <div class="price-row">
       ¥{price}
-      {status === 'open' && (
+      {status === 'open' && spots_remaining !== undefined && (
         <span class="spots"> · 还剩 {spots_remaining} 名额</span>
       )}
     </div>
-    <div class="spots-updated">名额数据 {spots_updated} 更新</div>
+    {spots_updated && <div class="spots-updated">名额数据 {spots_updated} 更新</div>}
 
     <!-- 满额 / 取消 -->
     {status === 'full' && <div class="banner banner-full">本期已满，关注下期 👀</div>}
@@ -223,8 +224,8 @@ const contactName = organizer_name ?? '晓晴老师';
       />
       <p class="qr-img-error fallback">图片加载失败，请微信联系：{organizer_wechat}</p>
       <p class="amount-note">⚠️ 请手动输入金额：¥{price}</p>
-      <p class="save-hint">长按图片保存二维码，打开{qrLabel}扫码付款</p>
-      <p class="save-hint-alt">若无法长按保存，请截图后用微信扫一扫识别</p>
+      <p class="save-hint">📱 在微信中长按图片 → 选「识别图中二维码」即可付款</p>
+      <p class="save-hint-alt">若长按无效，请截图后用{qrLabel}「扫一扫」识别</p>
     </div>
   )}
 
@@ -233,8 +234,8 @@ const contactName = organizer_name ?? '晓晴老师';
     <div class="contact-section">
       <h2>缴费成功后联系{contactName} 🌹</h2>
       <p class="tip">
-        请添加{contactName}微信，发送：<br />
-        <strong>付款截图 + 宝贝中文名 + 英文名 + 年龄</strong>
+        长按下方二维码 → 选「识别图中二维码」添加{contactName}<br />
+        添加后请发送：<strong>付款截图 + 宝贝中文名 + 英文名 + 年龄</strong>
       </p>
       <img
         class="contact-qr"
